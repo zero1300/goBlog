@@ -23,11 +23,12 @@ func main() {
 	postRoute.Setup()                                           // post routes are being setup
 	db.DB.AutoMigrate(&models.Post{})                           // migrating Post model to datbase table
 	router.Gin.Run(":8000")                                     //server started on 8000 port
-	// router := gin.Default() //new gin router initialization
-	// router.GET("/", func(context *gin.Context) {
-	// 	infrastructure.LoadEnv()     //loading env
-	// 	infrastructure.NewDatabase() //new database connection
-	// 	context.JSON(http.StatusOK, gin.H{"data": "Hello World !"})
-	// })
-	// router.Run(":8000")
+
+	userRepository := repository.NewPostRepository(db)
+	userService := service.NewPostService(userRepository)
+	userController := controller.NewPostController(userService)
+	userRoute := routes.NewPostRoute(userController, router)
+	userRoute.Setup()
+
+	db.DB.AutoMigrate(&models.Post{}, &models.User{})
 }
