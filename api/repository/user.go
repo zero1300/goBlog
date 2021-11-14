@@ -20,12 +20,13 @@ func NewUserRepository(db infrastructure.Database) UserRepository {
 
 //CreateUser -> method for saving user to database
 func (u UserRepository) CreateUser(user models.UserRegister) error {
+
 	var dbUser models.User
 	dbUser.Email = user.Email
 	dbUser.FirstName = user.FirstName
 	dbUser.LastName = user.LastName
 	dbUser.Password = user.Password
-	dbUser.IsActive = true
+	dbUser.IsActive = false
 	return u.db.DB.Create(&dbUser).Error
 }
 

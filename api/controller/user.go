@@ -26,14 +26,13 @@ func NewUserController(s service.UserService) UserController {
 //CreateUser ->  calls CreateUser services for validated user
 func (u *UserController) CreateUser(c *gin.Context) {
 	var user models.UserRegister
-
 	if err := c.ShouldBind(&user); err != nil {
 		util.ErrorJSON(c, http.StatusBadRequest, "Inavlid Json Provided")
 		return
 	}
 
-	hashPassord, _ := util.HashPassword(user.Password)
-	user.Password = hashPassord
+	hashPassword, _ := util.HashPassword(user.Password)
+	user.Password = hashPassword
 
 	err := u.service.CreateUser(user)
 	if err != nil {
@@ -45,30 +44,32 @@ func (u *UserController) CreateUser(c *gin.Context) {
 }
 
 //LoginUser : Generates JWT Token for validated user
-func (u *UserController) Login(c *gin.Context) {
+func (u *UserController) LoginUser(c *gin.Context) {
 	var user models.UserLogin
 	var hmacSampleSecret []byte
 	if err := c.ShouldBindJSON(&user); err != nil {
 		util.ErrorJSON(c, http.StatusBadRequest, "Inavlid Json Provided")
 		return
 	}
-
 	dbUser, err := u.service.LoginUser(user)
 	if err != nil {
 		util.ErrorJSON(c, http.StatusBadRequest, "Invalid Login Credentials")
 		return
 	}
-
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user": dbUser,
 		"exp":  time.Now().Add(time.Minute * 15).Unix(),
 	})
 
 	tokenString, err := token.SignedString(hmacSampleSecret)
+	if err != nil {
+		util.ErrorJSON(c, http.StatusBadRequest, "Failed to get token")
+		return
+	}
 	response := &util.Response{
 		Success: true,
 		Message: "Token generated sucessfully",
 		Data:    tokenString,
 	}
-	util.SuccessJSON(c, http.StatusOK, response)
+	c.JSON(http.StatusOK, response)
 }

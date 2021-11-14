@@ -12,7 +12,10 @@ type UserRoute struct {
 }
 
 //NewUserRoute -> initializes new instance of UserRoute
-func NewUserRoute(controller controller.UserController, handler infrastructure.GinRouter) UserRoute {
+func NewUserRoute(
+	controller controller.UserController,
+	handler infrastructure.GinRouter,
+) UserRoute {
 	return UserRoute{
 		Handler:    handler,
 		Controller: controller,
@@ -21,9 +24,9 @@ func NewUserRoute(controller controller.UserController, handler infrastructure.G
 
 //Setup -> setups user routes
 func (u UserRoute) Setup() {
-	user := u.Handler.Gin.Group("auth")
+	user := u.Handler.Gin.Group("/auth")
 	{
 		user.POST("/register", u.Controller.CreateUser)
-		user.POST("login", u.Controller.Login)
+		user.POST("/login", u.Controller.LoginUser)
 	}
 }
