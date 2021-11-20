@@ -15,7 +15,7 @@ type GinRouter struct {
 func NewGinRouter() GinRouter {
 
 	httpRouter := gin.Default()
-
+	httpRouter.Use(Cors())
 	httpRouter.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"data": "Up and Running..."})
 	})

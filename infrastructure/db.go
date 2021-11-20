@@ -29,6 +29,7 @@ func NewDatabase() Database {
 		panic("Failed to connect to database!")
 	}
 
+	db.Exec("alter database golang charset utf8")
 	fmt.Println("Database connection established")
 	return Database{
 		DB: db,

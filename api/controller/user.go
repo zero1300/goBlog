@@ -4,6 +4,7 @@ import (
 	"blog/api/service"
 	"blog/models"
 	"blog/util"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -21,6 +22,34 @@ func NewUserController(s service.UserService) UserController {
 	return UserController{
 		service: s,
 	}
+}
+
+// FindAllUser -> call FindAllUser service for get user info
+func (u UserController) FindAllUser(c *gin.Context) {
+	token := c.Request.Header.Get("token")
+	fmt.Printf(token)
+	users, total, err := u.service.FindAllUser()
+	if err != nil {
+		util.ErrorJSON(c, http.StatusBadRequest, "Fail to find queston")
+		fmt.Println(err)
+		return
+	}
+
+	respArr := make([]gin.H, 0, 0)
+
+	for _, user := range *users {
+		resp := user.ResponseMap()
+		respArr = append(respArr, resp)
+	}
+
+	c.JSON(http.StatusOK, &util.Response{
+		Success: true,
+		Message: "User result set",
+		Data: gin.H{
+			"rows":      respArr,
+			"total_row": total,
+		},
+	})
 }
 
 //CreateUser ->  calls CreateUser services for validated user

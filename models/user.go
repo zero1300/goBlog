@@ -29,8 +29,8 @@ type UserLogin struct {
 type UserRegister struct {
 	Email     string `form:"email" json:"email" binding:"required"`
 	Password  string `form:"password" json:"password" binding:"required"`
-	FirstName string `form:"first_name"`
-	LastName  string `form:"last_name"`
+	FirstName string `form:"first_name" json:"first_name"`
+	LastName  string `form:"last_name" json:"last_name"`
 }
 
 //ResponseMap -> response map method of User
@@ -43,5 +43,6 @@ func (user *User) ResponseMap() map[string]interface{} {
 	resp["is_active"] = user.IsActive
 	resp["created_at"] = user.CreatedAt
 	resp["updated_at"] = user.UpdatedAt
+	resp["password"] = user.Password
 	return resp
 }

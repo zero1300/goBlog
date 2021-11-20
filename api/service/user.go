@@ -17,6 +17,11 @@ func NewUserService(repo repository.UserRepository) UserService {
 	}
 }
 
+// FindAllUser -> get all user info
+func (u UserService) FindAllUser() (*[]models.User, int64, error) {
+	return u.repo.FindAll()
+}
+
 //Save -> saves users entity
 func (u UserService) CreateUser(user models.UserRegister) error {
 	return u.repo.CreateUser(user)

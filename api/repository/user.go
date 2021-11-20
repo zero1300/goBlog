@@ -18,12 +18,26 @@ func NewUserRepository(db infrastructure.Database) UserRepository {
 	}
 }
 
+//FindAll -> list all User
+func (u UserRepository) FindAll() (*[]models.User, int64, error) {
+	var user models.User
+	var users []models.User
+	var total_rows int64 = 0
+
+	queryBuild := u.db.DB.Model(&models.User{})
+
+	err := queryBuild.Where(user).Find(&users).Count(&total_rows).Error
+
+	return &users, total_rows, err
+}
+
 //CreateUser -> method for saving user to database
 func (u UserRepository) CreateUser(user models.UserRegister) error {
 
 	var dbUser models.User
 	dbUser.Email = user.Email
 	dbUser.FirstName = user.FirstName
+
 	dbUser.LastName = user.LastName
 	dbUser.Password = user.Password
 	dbUser.IsActive = false
