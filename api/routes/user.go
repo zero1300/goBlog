@@ -29,5 +29,6 @@ func (u UserRoute) Setup() {
 		user.POST("/register", u.Controller.CreateUser)
 		user.POST("/login", u.Controller.LoginUser)
 		user.GET("/getUser", u.Controller.FindAllUser)
+		user.DELETE("/:id", u.Controller.DeleteUser)
 	}
 }

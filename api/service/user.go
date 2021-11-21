@@ -30,5 +30,11 @@ func (u UserService) CreateUser(user models.UserRegister) error {
 //Login -> Gets validated user
 func (u UserService) LoginUser(user models.UserLogin) (*models.User, error) {
 	return u.repo.LoginUser(user)
+}
 
+//Delete -> delete user enttity
+func (u UserService) DeleteUser(id int64) error {
+	var user models.User
+	user.ID = id
+	return u.repo.DeleteUser(user)
 }

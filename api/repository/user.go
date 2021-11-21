@@ -44,6 +44,11 @@ func (u UserRepository) CreateUser(user models.UserRegister) error {
 	return u.db.DB.Create(&dbUser).Error
 }
 
+// DeleteUser -> method for delete user from database
+func (u UserRepository) DeleteUser(user models.User) error {
+	return u.db.DB.Delete(&user).Error
+}
+
 //LoginUser -> method for returning user
 func (u UserRepository) LoginUser(user models.UserLogin) (*models.User, error) {
 
