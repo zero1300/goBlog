@@ -28,5 +28,6 @@ func (p PostRoute) Setup() {
 		post.GET("/:id", p.Controller.GetPost)
 		post.DELETE("/:id", p.Controller.DeletePost)
 		post.PUT("/:id", p.Controller.UpdatePost)
+		post.GET("/getPage/:page", p.Controller.FindByPage)
 	}
 }

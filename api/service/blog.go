@@ -43,3 +43,8 @@ func (p PostService) Delete(id int64) error {
 func (p PostService) Find(post models.Post) (models.Post, error) {
 	return p.repository.Find(post)
 }
+
+//FindByPage -> calls post repo findByPage method
+func (p PostService) FindByPage(page int64) (*[]models.Post, int64, error) {
+	return p.repository.FindByPage(page)
+}

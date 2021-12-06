@@ -28,8 +28,11 @@ func NewUserController(s service.UserService) UserController {
 
 // FindAllUser -> call FindAllUser service for get user info
 func (u UserController) FindAllUser(c *gin.Context) {
-	token := c.Request.Header.Get("token")
-	fmt.Printf(token)
+	token := c.GetHeader("token")
+	if !util.CheckToken("2806374351z@gmail.com", token) {
+		util.ErrorJSON(c, http.StatusBadRequest, "token illegal")
+		return
+	}
 	users, total, err := u.service.FindAllUser()
 	if err != nil {
 		util.ErrorJSON(c, http.StatusBadRequest, "Fail to find queston")

@@ -6,7 +6,7 @@ import "time"
 type Post struct {
 	ID        int64     `gorm:"primary_key;auto_increment" json:"id"`
 	Title     string    `gorm:"size:200" json:"title"`
-	Body      string    `gorm:"size:3000" json:"body"`
+	Body      string    `gorm:"size:20000" json:"body"`
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 }

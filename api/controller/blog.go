@@ -102,6 +102,11 @@ func (p *PostController) GetPost(c *gin.Context) {
 
 //DeletePost : Deletes Post
 func (p *PostController) DeletePost(c *gin.Context) {
+	token := c.GetHeader("token")
+	if !util.CheckToken("2806374351z@gmail.com", token) {
+		util.ErrorJSON(c, http.StatusBadRequest, "token illegal")
+		return
+	}
 	idParam := c.Param("id")
 	id, err := strconv.ParseInt(idParam, 10, 64) //type conversion string to uint64
 	if err != nil {
@@ -160,5 +165,36 @@ func (p PostController) UpdatePost(ctx *gin.Context) {
 		Success: true,
 		Message: "Successfully Updated Post",
 		Data:    response,
+	})
+}
+
+// FindByPage: get post by page
+func (p PostController) FindByPage(ctx *gin.Context) {
+	pageParam := ctx.Param("page")
+	page, err := strconv.ParseInt(pageParam, 10, 64)
+	if err != nil {
+		util.ErrorJSON(ctx, http.StatusBadRequest, "page invalid")
+		return
+	}
+	data, total, err := p.service.FindByPage(page)
+	if err != nil {
+		util.ErrorJSON(ctx, http.StatusBadGateway, "Failed to find questions")
+		return
+	}
+	respArr := make([]map[string]interface{}, 0, 0)
+	for _, n := range *data {
+		if len(n.Body) > 200 {
+			n.Body = string([]rune(n.Body)[:200])
+		}
+		resp := n.ResponseMap()
+		respArr = append(respArr, resp)
+	}
+	ctx.JSON(http.StatusOK, &util.Response{
+		Success: true,
+		Message: "Post result set",
+		Data: gin.H{
+			"rows":  respArr,
+			"total": total,
+		},
 	})
 }
